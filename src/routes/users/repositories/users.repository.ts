@@ -16,9 +16,11 @@ export class UsersRepository {
   }
 
   async findAll(name = ''): Promise<UserEntity[]> {
-    return (await this.prisma.user.findMany()).filter(user =>
-      user.name.toLowerCase().includes(name.toLowerCase()),
-    );
+    return this.prisma.user.findMany({
+      where: {
+        OR: [{ name: { contains: name } }],
+      },
+    });
   }
 
   async findOne(id: number): Promise<UserEntity> {
